@@ -9,14 +9,11 @@ teclas = {pilas.simbolos.a:'izquierda', pilas.simbolos.s:'derecha'}
 # Creamos un control personalizado con esas teclas
 mandos = pilas.control.Control(teclas)
 
-VELOCIDAD = 1
-
 class Wari(pilasengine.actores.Actor):
 
     def iniciar(self):
         self.imagen = pilas.imagenes.cargar_grilla("imagenes/corriendo.png",4)
         self.cuadro = 3
-        self.velocidad = 0.0001
         self.aprender(pilas.habilidades.MoverseConElTeclado,control=mandos)
 
     def actualizar(self):
