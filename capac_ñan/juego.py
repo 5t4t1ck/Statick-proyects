@@ -5,7 +5,7 @@ pilas = pilasengine.iniciar()
 class personaje(pilasengine.actores.Actor):
 
     def iniciar(self):
-        #self.imagen = "imagenes/personaje.png"
+        self.imagen = "imagenes/corriendo.png"
         self.y = 300
         self.x = pilas.azar(-250, 250)
         self.velocidad = 0
