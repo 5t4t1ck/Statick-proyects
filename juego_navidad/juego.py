@@ -5,7 +5,7 @@ pilas = pilasengine.iniciar()
 class gorro_Navidad(pilasengine.actores.Actor):
 
     def iniciar(self):
-        #self.imagen = "imagenes/gorro.png"
+        self.imagen = "imagenes/gorro1.png"
         self.y = 300
         self.x = pilas.azar(-250, 250)
         self.velocidad = 0
