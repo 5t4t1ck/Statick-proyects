@@ -9,7 +9,6 @@ pilas = pilasengine.iniciar()
 # Creamos un control personalizado con esas teclas
 #mandos = pilas.control.Control(teclas)
 
-
 class Wari(pilasengine.actores.Actor):
 
     def iniciar(self):
