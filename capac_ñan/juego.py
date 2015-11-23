@@ -4,11 +4,6 @@ import pilasengine
 
 pilas = pilasengine.iniciar()
 
-# Definimos las teclas que moverán al personaje
-teclas = {pilas.simbolos.a:'izquierda', pilas.simbolos.s:'derecha'}
-# Creamos un control personalizado con esas teclas
-mandos = pilas.control.Control(teclas)
-
 VELOCIDAD = 5
 
 class Wari(pilasengine.actores.Actor):
@@ -29,9 +24,9 @@ class Esperando(pilasengine.comportamientos.Comportamiento):
         self.receptor.definir_cuadro(3)
 
     def actualizar(self):
-        if mandos.izquierda:
+        if pilas.escena_actual().control.izquierda:
             self.receptor.hacer_inmediatamente("Caminando")
-        elif mandos.derecha:
+        elif pilas.escena_actual().control.derecha:
             self.receptor.hacer_inmediatamente("Caminando")
 
 class Caminando(pilasengine.comportamientos.Comportamiento):
@@ -44,15 +39,14 @@ class Caminando(pilasengine.comportamientos.Comportamiento):
     def actualizar(self):
         self.avanzar_animacion()
 
-        if mandos.izquierda:
+        if pilas.escena_actual().control.izquierda:
             self.receptor.espejado = False
             self.receptor.x -= VELOCIDAD
-        elif mandos.derecha:
+        elif pilas.escena_actual().control.derecha:
             self.receptor.espejado = True
             self.receptor.x += VELOCIDAD
         else:
             self.receptor.hacer_inmediatamente("Esperando")
-
 
     def avanzar_animacion(self):
         self.paso += 1
@@ -61,19 +55,17 @@ class Caminando(pilasengine.comportamientos.Comportamiento):
 
         self.receptor.definir_cuadro(self.cuadros[self.paso])
 
-
 class EscenaWari(pilasengine.escenas.Escena):
     def iniciar(self):
         self.pilas.fondos.Fondo("imagenes/fondo.png")
-#        self.pilas.actores.Wari()
 
-pilas.fondos.Fondo("imagenes/fondo.png")
+pilas.escenas.vincular(EscenaWari)
 pilas.comportamientos.vincular(Caminando)
 pilas.comportamientos.vincular(Esperando)
-#pilas.escenas.vincular(EscenaWari)
 pilas.actores.vincular(Wari)
 
-#pilas.escenas.EscenaWari()
-pilas.actores.Wari()
+w = pilas.actores.Wari()
+ew = pilas.escenas.EscenaWari()
+ew.agregar_actor(w)
 
 pilas.ejecutar()
