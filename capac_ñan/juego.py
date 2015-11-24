@@ -8,12 +8,13 @@ pilas = pilasengine.iniciar()
 VELOCIDAD = 5
 
 class EscenaWari(pilasengine.escenas.Escena):
-''' La Escena principal del videojuego '''
+    ''' La Escena principal del videojuego '''
+
     def iniciar(self):
         self.pilas.fondos.Fondo("imagenes/fondo.png")
 
 class Wari(pilasengine.actores.Actor):
-''' El actor principal del videojuego y sus metodos principales'''
+    ''' El actor principal del videojuego y sus metodos principales'''
 
     def iniciar(self):
         self.imagen = pilas.imagenes.cargar_grilla("imagenes/corriendo.png",4)
@@ -40,6 +41,7 @@ class Esperando(pilasengine.comportamientos.Comportamiento):
 
 class Caminando(pilasengine.comportamientos.Comportamiento):
     '''Accion de caminar del actor'''
+
     def iniciar(self, receptor):
         self.receptor = receptor
         self.cuadros = [0,0,0,0,1,1,1,1,2,2,2,2,0,0,0,0,1,1,1,1,2,2,2,2]
@@ -96,15 +98,22 @@ class Saltando(pilasengine.comportamientos.Comportamiento):
             self.receptor.x -= VELOCIDAD
             self.receptor.espejado = False
 
-
+#vincular escenas
 pilas.escenas.vincular(EscenaWari)
+
+#Vincular comportamientos
 pilas.comportamientos.vincular(Caminando)
 pilas.comportamientos.vincular(Esperando)
 pilas.comportamientos.vincular(Saltando)
+
+#Vincular Actores
 pilas.actores.vincular(Wari)
 
-w = pilas.actores.Wari()
-ew = pilas.escenas.EscenaWari()
-ew.agregar_actor(w)
+#w = pilas.actores.Wari()
+#ew = pilas.escenas.EscenaWari()
+#ew.agregar_actor(w)
+
+pilas.escenas.EscenaWari(pilas.actores.Wari())
+
 
 pilas.ejecutar()
