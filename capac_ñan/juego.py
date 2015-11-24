@@ -30,6 +30,8 @@ class Esperando(pilasengine.comportamientos.Comportamiento):
             self.receptor.hacer_inmediatamente("Caminando")
         elif pilas.escena_actual().control.arriba:
             self.receptor.hacer_inmediatamente("Saltando")
+        else:
+            self.receptor.hacer_inmediatamente("Esperando")
 
 class Caminando(pilasengine.comportamientos.Comportamiento):
     '''Accion de caminar del actor'''
@@ -44,9 +46,15 @@ class Caminando(pilasengine.comportamientos.Comportamiento):
         if pilas.escena_actual().control.izquierda:
             self.receptor.espejado = False
             self.receptor.x -= VELOCIDAD
+            if pilas.escena_actual().control.arriba:
+                self.receptor.hacer_inmediatamente("Saltando")
         elif pilas.escena_actual().control.derecha:
             self.receptor.espejado = True
             self.receptor.x += VELOCIDAD
+            if pilas.escena_actual().control.arriba:
+                self.receptor.hacer_inmediatamente("Saltando")
+        elif pilas.escena_actual().control.arriba:
+            self.receptor.hacer_inmediatamente("Saltando")
         else:
             self.receptor.hacer_inmediatamente("Esperando")
 
