@@ -28,6 +28,8 @@ class Esperando(pilasengine.comportamientos.Comportamiento):
             self.receptor.hacer_inmediatamente("Caminando")
         elif pilas.escena_actual().control.derecha:
             self.receptor.hacer_inmediatamente("Caminando")
+        elif pilas.escena_actual().control.arriba:
+            self.receptor.hacer_inmediatamente("Saltando")
 
 class Caminando(pilasengine.comportamientos.Comportamiento):
     '''Accion de caminar del actor'''
@@ -55,6 +57,37 @@ class Caminando(pilasengine.comportamientos.Comportamiento):
 
         self.receptor.definir_cuadro(self.cuadros[self.paso])
 
+class Saltando(pilasengine.comportamientos.Comportamiento):
+    def iniciar(self, receptor):
+        self.receptor = receptor
+        self.y_inicial = self.receptor.y
+        self.pos_final = 15
+        self.cuadros = [2, 3]
+        self.vy = 10
+
+    def actualizar(self):
+        self.receptor.y += self.vy
+        self.vy -= 0.7
+
+        self.receptor.definir_cuadro(self.cuadros[0])
+
+        distancia_al_suelo = self.receptor.y - self.y_inicial
+        self.receptor.altura_del_salto = distancia_al_suelo
+
+        # Cuando llega al suelo, regresa al estado inicial.
+        if distancia_al_suelo < 0:
+            self.receptor.y = self.y_inicial
+            self.receptor.altura_del_salto = 0
+            self.receptor.hacer_inmediatamente("Esperando")
+
+        # Si pulsa a los costados se puede mover.
+        if pilas.escena_actual().control.derecha:
+            self.receptor.x += VELOCIDAD
+            self.receptor.espejado = True
+        elif pilas.escena_actual().control.izquierda:
+            self.receptor.x -= VELOCIDAD
+            self.receptor.espejado = False
+
 class EscenaWari(pilasengine.escenas.Escena):
     def iniciar(self):
         self.pilas.fondos.Fondo("imagenes/fondo.png")
@@ -62,6 +95,7 @@ class EscenaWari(pilasengine.escenas.Escena):
 pilas.escenas.vincular(EscenaWari)
 pilas.comportamientos.vincular(Caminando)
 pilas.comportamientos.vincular(Esperando)
+pilas.comportamientos.vincular(Saltando)
 pilas.actores.vincular(Wari)
 
 w = pilas.actores.Wari()
