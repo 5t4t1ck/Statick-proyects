@@ -1,20 +1,12 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 import pilasengine
-''' Capac Ñan, es un videojuego realizado en la version 1.3.2  de pilasengine'''
 
 pilas = pilasengine.iniciar()
 
 VELOCIDAD = 5
 
-class EscenaWari(pilasengine.escenas.Escena):
-    ''' La Escena principal del videojuego '''
-
-    def iniciar(self):
-        self.pilas.fondos.Fondo("imagenes/fondo.png")
-
 class Wari(pilasengine.actores.Actor):
-    ''' El actor principal del videojuego y sus metodos principales'''
 
     def iniciar(self):
         self.imagen = pilas.imagenes.cargar_grilla("imagenes/corriendo.png",4)
@@ -43,7 +35,6 @@ class Esperando(pilasengine.comportamientos.Comportamiento):
 
 class Caminando(pilasengine.comportamientos.Comportamiento):
     '''Accion de caminar del actor'''
-
     def iniciar(self, receptor):
         self.receptor = receptor
         self.cuadros = [0,0,0,0,1,1,1,1,2,2,2,2,0,0,0,0,1,1,1,1,2,2,2,2]
@@ -75,7 +66,6 @@ class Caminando(pilasengine.comportamientos.Comportamiento):
         self.receptor.definir_cuadro(self.cuadros[self.paso])
 
 class Saltando(pilasengine.comportamientos.Comportamiento):
-    '''Accion de caminar del actor'''
     def iniciar(self, receptor):
         self.receptor = receptor
         self.y_inicial = self.receptor.y
@@ -106,22 +96,18 @@ class Saltando(pilasengine.comportamientos.Comportamiento):
             self.receptor.x -= VELOCIDAD
             self.receptor.espejado = False
 
-#vincular escenas
-pilas.escenas.vincular(EscenaWari)
+class EscenaWari(pilasengine.escenas.Escena):
+    def iniciar(self):
+        self.pilas.fondos.Fondo("imagenes/fondo.png")
 
-#Vincular comportamientos
+pilas.escenas.vincular(EscenaWari)
 pilas.comportamientos.vincular(Caminando)
 pilas.comportamientos.vincular(Esperando)
 pilas.comportamientos.vincular(Saltando)
-
-#Vincular Actores
 pilas.actores.vincular(Wari)
 
-#w = pilas.actores.Wari()
-#ew = pilas.escenas.EscenaWari()
-#ew.agregar_actor(w)
-
-pilas.escenas.EscenaWari(pilas.actores.Wari())
-
+w = pilas.actores.Wari()
+ew = pilas.escenas.EscenaWari()
+ew.agregar_actor(w)
 
 pilas.ejecutar()
