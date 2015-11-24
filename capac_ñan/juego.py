@@ -1,12 +1,19 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 import pilasengine
+''' Capac Ñan, es un videojuego realizado en la version 1.3.2  de pilasengine'''
 
 pilas = pilasengine.iniciar()
 
 VELOCIDAD = 5
 
+class EscenaWari(pilasengine.escenas.Escena):
+''' La Escena principal del videojuego '''
+    def iniciar(self):
+        self.pilas.fondos.Fondo("imagenes/fondo.png")
+
 class Wari(pilasengine.actores.Actor):
+''' El actor principal del videojuego y sus metodos principales'''
 
     def iniciar(self):
         self.imagen = pilas.imagenes.cargar_grilla("imagenes/corriendo.png",4)
@@ -58,6 +65,7 @@ class Caminando(pilasengine.comportamientos.Comportamiento):
         self.receptor.definir_cuadro(self.cuadros[self.paso])
 
 class Saltando(pilasengine.comportamientos.Comportamiento):
+    '''Accion de caminar del actor'''
     def iniciar(self, receptor):
         self.receptor = receptor
         self.y_inicial = self.receptor.y
@@ -88,9 +96,6 @@ class Saltando(pilasengine.comportamientos.Comportamiento):
             self.receptor.x -= VELOCIDAD
             self.receptor.espejado = False
 
-class EscenaWari(pilasengine.escenas.Escena):
-    def iniciar(self):
-        self.pilas.fondos.Fondo("imagenes/fondo.png")
 
 pilas.escenas.vincular(EscenaWari)
 pilas.comportamientos.vincular(Caminando)
