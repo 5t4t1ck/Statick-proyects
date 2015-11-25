@@ -1,6 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 import pilasengine
+import random
 
 pilas = pilasengine.iniciar()
 
@@ -12,10 +13,17 @@ class Wari(pilasengine.actores.Actor):
         self.imagen = pilas.imagenes.cargar_grilla("imagenes/corriendo.png",4)
         self.hacer("Esperando")
         self.escala = 0.25
-
+        self.y = -160
+        
     def definir_cuadro(self, indice):
         self.imagen.definir_cuadro(indice)
 
+    def perder(self):
+        self.comportamientos.perder = Perdiendo(self)
+        mensaje_perdiendo = pilas.actores.Texto("Has perdido!!!")
+        mensaje_perdiendo = 0
+        mensaje_perdiendo = [1], 0.5
+       
 class Esperando(pilasengine.comportamientos.Comportamiento):
     '''Actor en posicion normal hasta que el usuario pulse alguna tecla'''
 
@@ -99,6 +107,42 @@ class Saltando(pilasengine.comportamientos.Comportamiento):
 class EscenaWari(pilasengine.escenas.Escena):
     def iniciar(self):
         self.pilas.fondos.Fondo("imagenes/fondo.png")
+        pilas.tareas.agregar(2, crear_enemigo)
+
+class Enemigo(pilasengine.actores.Bomba):
+    
+    def iniciar(self):
+        pilasengine.actores.Bomba.iniciar(self)
+        self.izquierda = 320
+        self.x = random.randint(-320, 320)
+        self.y = random.randint(-120, -100) 
+   
+    def actualizar(self):
+        pilasengine.actores.Bomba.actualizar(self)
+
+class Perdiendo(pilasengine.comportamientos.Comportamiento):
+
+    def iniciar(self):
+        self.w.definir_animacion([3])
+        self.velocidad = -2
+
+    def actualizar(self):
+        self.w.rotacion += 7
+        self.w.escala -= 0.01
+        self.w.x -= self.velocidad
+        self.velocidad +=0.2
+        self.w.y -= 1
+
+enemigos = []
+
+def crear_enemigo():
+    un_enemigo = Enemigo(pilas)
+    enemigos.append(un_enemigo)
+    return True
+
+def cuando_toca_enemigo():
+    w.perder()
+    enemigo.eliminar()
 
 pilas.escenas.vincular(EscenaWari)
 pilas.comportamientos.vincular(Caminando)
@@ -110,4 +154,5 @@ w = pilas.actores.Wari()
 ew = pilas.escenas.EscenaWari()
 ew.agregar_actor(w)
 
+pilas.colisiones.agregar(w, enemigos, cuando_toca_enemigo)
 pilas.ejecutar()
