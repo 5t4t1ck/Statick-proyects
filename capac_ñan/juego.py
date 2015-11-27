@@ -105,14 +105,49 @@ class EscenaWari(pilasengine.escenas.Escena):
     def iniciar(self):
         self.pilas.fondos.Fondo("imagenes/fondo.png")
 
+class Camino(pilasengine.actores.Actor):
+
+    def iniciar(self):
+        self.imagen = pilas.imagenes.cargar_grilla("imagenes/mapas.png", 6)
+        self.hacer("Esperando_camino")
+        self.y = -140
+    
+    def definir_cuadro(self, indice):
+        self.imagen.definir_cuadro(indice)
+
+class Esperando_camino(pilasengine.comportamientos.Comportamiento):
+    
+    def iniciar(self, receptor):
+        self.receptor = receptor
+        self.receptor.definir_cuadro(3)
+        self.cuadros = [0,0,0,0,1,1,1,1,2,2,2,2,3,3,3,3,4,4,4,4,5,5,5,5,6,6,6,6,6]
+        self.paso = 0
+
+    def actualizar(self):
+        self.avanzar_animacion_pais()
+
+    def avanzar_animacion_pais():
+        self.paso += 1
+        if self.paso>=len(self.cuadros):
+            self.paso = 0
+
+        self.receptor.definir_cuadro(self, cuadros[self.paso])
+
 pilas.escenas.vincular(EscenaWari)
+
 pilas.comportamientos.vincular(Caminando)
 pilas.comportamientos.vincular(Esperando)
 pilas.comportamientos.vincular(Saltando)
+pilas.comportamientos.vincular(Esperando_camino)
+
 pilas.actores.vincular(Wari)
+pilas.actores.vincular(Camino)
 
 w = pilas.actores.Wari()
+c = pilas.actores.Camino()
+
 ew = pilas.escenas.EscenaWari()
+
 ew.agregar_actor(w)
 
 pilas.ejecutar()
