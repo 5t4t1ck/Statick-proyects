@@ -2,8 +2,11 @@
 # -*- coding: utf-8 -*-
 import pilasengine
 import random
+import sys
 
 pilas = pilasengine.iniciar()
+
+pilas.reiniciar_si_cambia(__file__)
 
 VELOCIDAD = 5
 
@@ -14,7 +17,7 @@ class Wari(pilasengine.actores.Actor):
         self.hacer("Esperando")
         self.escala = 0.25
         self.y = -160
-        
+
     def definir_cuadro(self, indice):
         self.imagen.definir_cuadro(indice)
 
@@ -23,7 +26,7 @@ class Wari(pilasengine.actores.Actor):
         mensaje_perdiendo = pilas.actores.Texto("Has perdido!!!")
         mensaje_perdiendo = 0
         mensaje_perdiendo = [1], 0.5
-       
+
 class Esperando(pilasengine.comportamientos.Comportamiento):
     '''Actor en posicion normal hasta que el usuario pulse alguna tecla'''
 
@@ -110,13 +113,13 @@ class EscenaWari(pilasengine.escenas.Escena):
         pilas.tareas.agregar(2, crear_enemigo)
 
 class Enemigo(pilasengine.actores.Bomba):
-    
+
     def iniciar(self):
         pilasengine.actores.Bomba.iniciar(self)
         self.izquierda = 320
         self.x = random.randint(-320, 320)
-        self.y = random.randint(-120, -100) 
-   
+        self.y = random.randint(-120, -100)
+
     def actualizar(self):
         pilasengine.actores.Bomba.actualizar(self)
 
