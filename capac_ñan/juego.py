@@ -105,17 +105,6 @@ class EscenaWari(pilasengine.escenas.Escena):
     def iniciar(self):
         self.pilas.fondos.Fondo("imagenes/fondo.png")
 
-class Enemigo(pilasengine.actores.Bomba):
-    
-    def iniciar(self):
-        pilasengine.actores.Bomba.iniciar(self)
-        self.izquierda = 320
-        self.x = random.randint(-320, 320)
-        self.y = random.randint(-120, -100) 
-   
-    def actualizar(self):
-        pilasengine.actores.Bomba.actualizar(self)
-
 pilas.escenas.vincular(EscenaWari)
 pilas.comportamientos.vincular(Caminando)
 pilas.comportamientos.vincular(Esperando)
