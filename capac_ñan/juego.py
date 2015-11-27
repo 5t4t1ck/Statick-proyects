@@ -2,8 +2,11 @@
 # -*- coding: utf-8 -*-
 import pilasengine
 import random
+import sys
 
 pilas = pilasengine.iniciar()
+
+pilas.reiniciar_si_cambia(__file__)
 
 VELOCIDAD = 5
 
