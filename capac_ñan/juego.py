@@ -3,13 +3,14 @@
 import pilasengine
 import random
 import sys
+import os
 
 pilas = pilasengine.iniciar()
 
-pilas.reiniciar_si_cambia(__file__)
+pilas.reiniciar_si_cambia(os.path.abspath(__file__))
 
 VELOCIDAD = 5
-
+TIEMPO_APARICION = 5
 class Wari(pilasengine.actores.Actor):
 
     def iniciar(self):
@@ -17,7 +18,7 @@ class Wari(pilasengine.actores.Actor):
         self.hacer("Esperando")
         self.escala = 0.25
         self.y = -160
-        
+
     def definir_cuadro(self, indice):
         self.imagen.definir_cuadro(indice)
 
@@ -75,7 +76,7 @@ class Saltando(pilasengine.comportamientos.Comportamiento):
         self.receptor = receptor
         self.y_inicial = self.receptor.y
         self.pos_final = 15
-        self.cuadros = [2, 3]
+        self.cuadros = [2]
         self.vy = 10
 
     def actualizar(self):
@@ -104,50 +105,38 @@ class Saltando(pilasengine.comportamientos.Comportamiento):
 class EscenaWari(pilasengine.escenas.Escena):
     def iniciar(self):
         self.pilas.fondos.Fondo("imagenes/fondo.png")
+        self.pilas.actores.Wari()
+        self.crea_pais()
+        self.pilas.tareas.siempre(TIEMPO_APARICION,self.crea_pais)
 
-class Camino(pilasengine.actores.Actor):
+    def crea_pais(self):
+        p = pilas.actores.PaisCorrecto()
 
+class PaisCorrecto(pilasengine.actores.Actor):
     def iniciar(self):
         self.imagen = pilas.imagenes.cargar_grilla("imagenes/mapas.png", 6)
-        self.hacer("Esperando_camino")
-        self.y = -140
-    
+        self.x = random.randint(-300,300)
+        self.y = 60
+        self.definir_cuadro(random.randint(0,5))
+
     def definir_cuadro(self, indice):
         self.imagen.definir_cuadro(indice)
 
-class Esperando_camino(pilasengine.comportamientos.Comportamiento):
-    
-    def iniciar(self, receptor):
-        self.receptor = receptor
-        self.receptor.definir_cuadro(3)
-        self.cuadros = [0,0,0,0,1,1,1,1,2,2,2,2,3,3,3,3,4,4,4,4,5,5,5,5,6,6,6,6,6]
-        self.paso = 0
-
     def actualizar(self):
-        self.avanzar_animacion_pais()
+        self.pilas.tareas.siempre(TIEMPO_APARICION,self.auto_eliminar)
 
-    def avanzar_animacion_pais():
-        self.paso += 1
-        if self.paso>=len(self.cuadros):
-            self.paso = 0
-
-        self.receptor.definir_cuadro(self, cuadros[self.paso])
+    def auto_eliminar(self):
+        self.eliminar()
 
 pilas.escenas.vincular(EscenaWari)
 
 pilas.comportamientos.vincular(Caminando)
 pilas.comportamientos.vincular(Esperando)
 pilas.comportamientos.vincular(Saltando)
-pilas.comportamientos.vincular(Esperando_camino)
 
 pilas.actores.vincular(Wari)
-pilas.actores.vincular(Camino)
-
-w = pilas.actores.Wari()
-c = pilas.actores.Camino()
+pilas.actores.vincular(PaisCorrecto)
 
 ew = pilas.escenas.EscenaWari()
-
-ew.agregar_actor(w)
 
 pilas.ejecutar()
