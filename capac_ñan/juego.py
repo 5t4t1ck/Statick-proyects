@@ -52,11 +52,15 @@ class Caminando(pilasengine.comportamientos.Comportamiento):
         if pilas.escena_actual().control.izquierda:
             self.receptor.espejado = False
             self.receptor.x -= VELOCIDAD
+            if self.receptor.x <= -265:
+                self.receptor.x = -265
             if pilas.escena_actual().control.arriba:
                 self.receptor.hacer_inmediatamente("Saltando")
         elif pilas.escena_actual().control.derecha:
             self.receptor.espejado = True
             self.receptor.x += VELOCIDAD
+            if self.receptor.x >= 265:
+                self.receptor.x = 265
             if pilas.escena_actual().control.arriba:
                 self.receptor.hacer_inmediatamente("Saltando")
         elif pilas.escena_actual().control.arriba:
